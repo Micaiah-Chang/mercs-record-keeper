@@ -20,14 +20,14 @@ def find_max_page_num(page_content):
     else:
         return 1
 
-def save_page_to_disk(page_content, topic_name, page_number):
+def save_page_to_disk(page_content, topic_name, page_number, prefix='.'):
     parser = BeautifulSoup(page_content, "html.parser")
 
     page_name = 'page%s' % page_number
 
     # post_iter = parser.find_all.find_all("div", {'class': 'msg_infobox'})
 
-    topic_folder = './{0}'.format(topic_name)
+    topic_folder = os.path.join(prefix, topic_name)
     if not os.path.exists(topic_folder):
         os.makedirs(topic_folder)
 
