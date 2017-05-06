@@ -58,7 +58,7 @@ def main():
     max_page = find_max_page_num(response.text)
     save_page_to_disk(current_page, DAY, 1)
 
-    for current_page_number in range(1, max_page+2):
+    for current_page_number in range(1, max_page):
         time.sleep(2)
         page_querystring = "?page=" + str(current_page_number)
         current_page_url = url + page_querystring
