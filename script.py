@@ -64,7 +64,7 @@ def main():
         current_page_url = url + page_querystring
         current_page = requests.get(current_page_url, headers=headers)
 
-        save_page_to_disk(current_page.text, DAY, current_page_number)
+        save_page_to_disk(current_page.text, DAY, current_page_number+1)
 
 
 if __name__ == '__main__':
