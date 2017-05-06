@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import sys
 import time
 
 from bs4 import BeautifulSoup
@@ -39,11 +40,13 @@ def save_page_to_disk(page_content, topic_name, page_number, prefix='.'):
         html_file.write(page_content)
 
 def main():
+    __, url = sys.argv[0], sys.argv[1]
+    DAY = 'mercs-topic-%s' % '1'
+
     BOT_NAME = "mercscrawler"
     # User-Agent data, to identify my crawler to GameFAQs
     agent = 'Mozilla/5.0 (compatible; %s/1.0;)' % BOT_NAME
     headers = {'User-Agent': agent}
-    url = 'https://www.gamefaqs.com/boards/8-gamefaqs-contests/75261000'
     response = requests.get(url=url, headers=headers)
 
     if response.status_code >= 300:
