@@ -59,9 +59,7 @@ def save_page_to_disk(page_content, topic_name, page_number, prefix='.'):
     with html_file:
         html_file.write(page_content)
 
-def main():
-    __, url = sys.argv[0], sys.argv[1]
-
+def get_all_pages_from_url(url):
     BOT_NAME = "mercscrawler"
     # User-Agent data, to identify my crawler to GameFAQs
     agent = 'Mozilla/5.0 (compatible; %s/1.0;)' % BOT_NAME
@@ -87,6 +85,10 @@ def main():
 
         save_page_to_disk(current_page.text, topic_title, current_page_number+1)
 
+
+def main():
+    __, url = sys.argv[0], sys.argv[1]
+    get_all_pages_from_url(url)
 
 if __name__ == '__main__':
     main()
