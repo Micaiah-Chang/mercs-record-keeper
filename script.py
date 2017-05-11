@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import json
 import os
+import re
 import sys
 import time
 
@@ -23,9 +24,14 @@ def find_max_page_num(page_content):
     html_parser = BeautifulSoup(page_content, 'html.parser')
 
     page_selector = html_parser.find('select', id='pagejump')
+    page_regexp = re.compile(r"Page \d+ of \d+")
+    paginate_ul = html_parser.find(string=page_regexp)
     if page_selector is not None:
         last_option_tag = page_selector('option')[-1]
         return int(last_option_tag['value']) + 1
+    elif paginate_ul is not None:
+        match = re.search(r'Page \d+ of (\d+)', paginate_ul)
+        return int(match.group(1))
     else:
         return 1
 
