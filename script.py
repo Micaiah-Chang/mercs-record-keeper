@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import json
 import os
 import sys
 import time
@@ -10,6 +11,13 @@ import requests
 
 GAMEFAQS_ENCODING = 'ISO-8859-1'
 DAY = 'mercs-day-1'
+
+def generate_gamefaqs_cookie():
+    with open('./cookies.txt', encoding='ascii') as cookie_json_file:
+        cookie_json_string = cookie_json_file.read()
+        cookies = json.loads(cookie_json_string)
+
+    return cookies
 
 def find_max_page_num(page_content):
     html_parser = BeautifulSoup(page_content, 'html.parser')
@@ -47,7 +55,9 @@ def main():
     # User-Agent data, to identify my crawler to GameFAQs
     agent = 'Mozilla/5.0 (compatible; %s/1.0;)' % BOT_NAME
     headers = {'User-Agent': agent}
-    response = requests.get(url=url, headers=headers)
+
+    cookies = generate_gamefaqs_cookie()
+    response = requests.get(url=url, headers=headers, cookies=cookies)
 
     if response.status_code >= 300:
         print("Error! Failed to download initial page!", flush=True)
@@ -62,7 +72,7 @@ def main():
         time.sleep(2)
         page_querystring = "?page=" + str(current_page_number)
         current_page_url = url + page_querystring
-        current_page = requests.get(current_page_url, headers=headers)
+        current_page = requests.get(current_page_url, headers=headers, cookies=cookies)
 
         save_page_to_disk(current_page.text, DAY, current_page_number+1)
 
