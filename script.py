@@ -86,9 +86,33 @@ def get_all_pages_from_url(url):
         save_page_to_disk(current_page.text, topic_title, current_page_number+1)
 
 
+
 def main():
     __, url = sys.argv[0], sys.argv[1]
     get_all_pages_from_url(url)
 
 if __name__ == '__main__':
-    main()
+    from watchdog.observers import Observer
+    from watchdog.events import FileSystemEventHandler, FileModifiedEvent
+
+    class DoStuffEventHandler(FileSystemEventHandler):
+        def on_modified(self, event):
+            if not isinstance(event, FileModifiedEvent):
+                return
+            path = event.src_path
+            with open(path, encoding='ascii') as url_file:
+                url = url_file.read()
+                get_all_pages_from_url(url)
+
+    observer = Observer()
+    __, path = sys.argv[0], sys.argv[1]
+    observer.schedule(DoStuffEventHandler(), path, recursive=True)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+
+    observer.join()
+#    main()
